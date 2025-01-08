@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hudiasco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .bd-placeholder-img {
+          font-size: 1.125rem;
+          text-anchor: middle;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          user-select: none;
+        }
+  
+        @media (min-width: 768px) {
+          .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+          }
+        }
+      </style>  
+</head>
+<body>
+    <div class="col-lg-8 mx-auto p-3 py-md-5">
+        <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+            <h2>Trey>Scape</h2>
+        </header>
+      
+        <main>
+          <h1>Get started with Trey>Scape</h1>
+          <p class="fs-5 col-md-8">
+            🎉 Discover Winning Numbers Instantly! 📊 <br>
+            🎯 Your one-stop app for scraping and analyzing lottery results . <br>
+            🚀 Track trends, view stats, and download insights effortlessly. <br>
+            👉 Start Now – It's Fast and Easy!
+          </p>
+      
+          <!-- <div class="mb-5">
+            <a href="/docs/5.0/examples/" class="btn btn-primary btn-lg px-4">Download examples</a>
+          </div> -->
+      
+          <hr class="col-3 col-md-2 mb-5">
+      
+          <div class="row g-5">
+            <div class="col-md-6">
+              <h2>Winning Numbers</h2>
+              <p>The buttons below will generate a sheet containg the winning numbers of the particular category dating from 2010-2024</p>
+              <ul class="icon-list" type="none">
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="scrapeLottomax('lotto-max')">LottoMax Winning Numbers</button></li>
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="scrapeLottomax('lotto-649')">Lotto649 Winning Numbers</button></li>
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="scrapeOntario()">Ontario49 Winning Numbers</button></li>
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="scrapeLottario()">Lottario Winning Numbers</button></li>
+           
+              </ul>
+            </div>
+      
+            <div class="col-md-6">
+              <h2>Frequent Numbers</h2>
+              <p>The buttons below will generate a sheet containg the first 4 most frequent winning numbers/month for a particular category dating from 2010-2024</p>
+              <ul class="icon-list" type="none">
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="lottoFrequent('lotto-max')">LottoMax Frequent Numbers</button></li>
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="lottoFrequent('lotto-649')">Lotto649 Frequent Numbers</button></li>
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="ontarioFrequent()">Ontario49 Frequent Numbers</button></li>
+                <li class="py-1"><button type="button" class="btn btn-primary"  onclick="lottarioFrequent()">Lottario Frequent Numbers</button></li>
+           
+              </ul>
+            </div>
+          </div>
+          <div class="text-center">
+            <span id="loader" class="loader fs-3 ps-2"></span>
+          </div>
+        </main>
+        <footer class="pt-5 my-5 text-muted border-top">
+          Created by the treyzedesign &middot; &copy; 2024
+        </footer>
+      </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        async function scrapeLottomax(name) {
+            try {
+                let loader = document.getElementById("loader")
+                loader.innerText = "scraping..."
+                const url = "{{base_url}}";
+                const response = await fetch(`${url}/api/winning_numbers/${name}`, {
+                    method: 'GET',
+                });
+                console.log(response);
+                if (!response.ok) {
+                    loader.innerText = ""
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                console.log("Blob received:", blob);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = downloadUrl;
+                anchor.download = `${name}_winning_numbers.xlsx`; // Filename for download
+                anchor.click();
+                window.URL.revokeObjectURL(downloadUrl); // Clean up
+                loader.innerText = ""
+                alert("excel file downloaded successfully")
+            } catch (error) {
+                console.error('Error scraping data:', error);
+                alert('Failed to scrape data. Please try again later.');
+            }
+        }
+        async function scrapeOntario() {
+            try {
+                let loader = document.getElementById("loader")
+                loader.innerText = "scraping..."
+                const url = "{{base_url}}";
+                const response = await fetch(`${url}/api/ontario/winning_numbers`, {
+                    method: 'GET',
+                });
+                console.log(response);
+                if (!response.ok) {
+                    loader.innerText = ""
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                console.log("Blob received:", blob);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = downloadUrl;
+                anchor.download = `Ontario49_winning_numbers.xlsx`; // Filename for download
+                anchor.click();
+                window.URL.revokeObjectURL(downloadUrl); // Clean up
+                loader.innerText = ""
+                alert("excel file downloaded successfully")
+            } catch (error) {
+                console.error('Error scraping data:', error);
+                alert('Failed to scrape data. Please try again later.');
+            }
+        }
+        async function scrapeLottario() {
+            try {
+                let loader = document.getElementById("loader")
+                loader.innerText = "scraping..."
+                const url = "{{base_url}}";
+                const response = await fetch(`${url}/api/lottario/winning_numbers`, {
+                    method: 'GET',
+                });
+                console.log(response);
+                if (!response.ok) {
+                    loader.innerText = ""
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                console.log("Blob received:", blob);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = downloadUrl;
+                anchor.download = `Lottario_winning_numbers.xlsx`; // Filename for download
+                anchor.click();
+                window.URL.revokeObjectURL(downloadUrl); // Clean up
+                loader.innerText = ""
+                alert("excel file downloaded successfully")
+            } catch (error) {
+                console.error('Error scraping data:', error);
+                alert('Failed to scrape data. Please try again later.');
+            }
+        }
+        async function lottoFrequent(name) {
+            try {
+                let loader = document.getElementById("loader")
+                loader.innerText = "scraping..."
+                const url = "{{base_url}}";
+                const response = await fetch(`${url}/api/frequency_of_numbers/${name}`, {
+                    method: 'GET',
+                });
+                console.log(response);
+                if (!response.ok) {
+                    loader.innerText = ""
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                console.log("Blob received:", blob);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = downloadUrl;
+                anchor.download = `${name}_frequent_numbers.xlsx`; // Filename for download
+                anchor.click();
+                window.URL.revokeObjectURL(downloadUrl); // Clean up
+                loader.innerText = ""
+                alert("excel file downloaded successfully")
+            } catch (error) {
+                console.error('Error scraping data:', error);
+                alert('Failed to scrape data. Please try again later.');
+            }
+        }
+        async function ontarioFrequent() {
+            try {
+                let loader = document.getElementById("loader")
+                loader.innerText = "scraping..."
+                const url = "{{base_url}}";
+                const response = await fetch(`${url}/api/ontario/frequency_of_numbers`, {
+                    method: 'GET',
+                });
+                console.log(response);
+                if (!response.ok) {
+                    loader.innerText = ""
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                console.log("Blob received:", blob);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = downloadUrl;
+                anchor.download = `Ontario49_frequent_numbers.xlsx`; // Filename for download
+                anchor.click();
+                window.URL.revokeObjectURL(downloadUrl); // Clean up
+                loader.innerText = ""
+                alert("excel file downloaded successfully")
+            } catch (error) {
+                console.error('Error scraping data:', error);
+                alert('Failed to scrape data. Please try again later.');
+            }
+        }
+        async function lottarioFrequent() {
+            try {
+                let loader = document.getElementById("loader")
+                loader.innerText = "scraping..."
+                const url = "{{base_url}}";
+                const response = await fetch(`${url}/api/lottario/frequency_of_numbers`, {
+                    method: 'GET',
+                });
+                console.log(response);
+                if (!response.ok) {
+                    loader.innerText = ""
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+                const blob = await response.blob();
+                console.log("Blob received:", blob);
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = downloadUrl;
+                anchor.download = `lottario_frequent_numbers.xlsx`; // Filename for download
+                anchor.click();
+                window.URL.revokeObjectURL(downloadUrl); // Clean up
+                loader.innerText = ""
+                alert("excel file downloaded successfully")
+            } catch (error) {
+                console.error('Error scraping data:', error);
+                alert('Failed to scrape data. Please try again later.');
+            }
+        }
+   </script>
+</body>
+</html>
